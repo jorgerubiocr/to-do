@@ -29,11 +29,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final _controller = TextEditingController();
 
-  void _incrementCounter() {
+  void _addTask() {
     setState(() {
-      _counter++;
+      // TODO: add task to a list
     });
   }
 
@@ -48,18 +48,41 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: .center,
           children: [
-            const Text('You have pushed the button this many times:'),
+            const Text('You wrote this:'),
             Text(
-              '$_counter',
+              _controller.text,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 8,
+            right: 8,
+            top: 8,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 8,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _controller,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter a task',
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: _addTask,
+                tooltip: 'AddTask',
+                icon: const Icon(Icons.add),
+              ),
+            ]
+          ),
+        ),
       ),
     );
   }
