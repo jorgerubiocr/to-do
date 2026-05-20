@@ -30,11 +30,21 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final _controller = TextEditingController();
+  final _tasks = <String>[];
+
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   void _addTask() {
-    setState(() {
-      // TODO: add task to a list
-    });
+    final text = _controller.text.trim();
+    if (text.isNotEmpty) {
+      setState(() {
+          _tasks.add(_controller.text);
+          _controller.clear();
+      });
+    }
   }
 
   @override
@@ -45,15 +55,13 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You wrote this:'),
-            Text(
-              _controller.text,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        child: ListView.builder(
+          itemCount: _tasks.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(_tasks[index]),
+            );
+          }
         ),
       ),
       bottomNavigationBar: SafeArea(
