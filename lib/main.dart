@@ -47,6 +47,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void _removeTask(index) {
+    setState(() {
+        _tasks.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +66,10 @@ class _MyHomePageState extends State<MyHomePage> {
           itemBuilder: (context, index) {
             return ListTile(
               title: Text(_tasks[index]),
+              trailing: IconButton(
+                onPressed: () => _removeTask(index),
+                icon: const Icon(Icons.delete),
+              ),
             );
           }
         ),
