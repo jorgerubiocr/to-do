@@ -61,17 +61,27 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: ListView.builder(
+        child: ReorderableListView.builder(
           itemCount: _tasks.length,
           itemBuilder: (context, index) {
             return ListTile(
+              key: Key('$index'),
               title: Text(_tasks[index]),
               trailing: IconButton(
                 onPressed: () => _removeTask(index),
                 icon: const Icon(Icons.delete),
               ),
             );
-          }
+          },
+          onReorder: (int oldIndex, int newIndex) {
+            setState(() {
+              if (oldIndex < newIndex) {
+                newIndex -= 1;
+              }
+              final String task = _tasks.removeAt(oldIndex);
+              _tasks.insert(newIndex, task);
+            });
+          },
         ),
       ),
       bottomNavigationBar: SafeArea(
