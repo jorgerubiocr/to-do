@@ -10,11 +10,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'To-Do',
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'To-Do'),
     );
   }
 }
@@ -59,30 +59,31 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        centerTitle: true,
       ),
-      body: Center(
-        child: ReorderableListView.builder(
-          itemCount: _tasks.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              key: Key('$index'),
-              title: Text(_tasks[index]),
-              trailing: IconButton(
-                onPressed: () => _removeTask(index),
-                icon: const Icon(Icons.delete),
-              ),
-            );
-          },
-          onReorder: (int oldIndex, int newIndex) {
-            setState(() {
+      body: _tasks.isEmpty
+      ? Center(child: Text('There are no pending tasks'))
+      : ReorderableListView.builder(
+        itemCount: _tasks.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            key: Key('$index'),
+            title: Text(_tasks[index]),
+            trailing: IconButton(
+              onPressed: () => _removeTask(index),
+              icon: const Icon(Icons.delete),
+            ),
+          );
+        },
+        onReorder: (int oldIndex, int newIndex) {
+          setState(() {
               if (oldIndex < newIndex) {
                 newIndex -= 1;
               }
               final String task = _tasks.removeAt(oldIndex);
               _tasks.insert(newIndex, task);
-            });
-          },
-        ),
+          });
+        },
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
