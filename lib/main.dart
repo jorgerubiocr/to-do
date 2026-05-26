@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +31,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final _controller = TextEditingController();
-  final _tasks = <String>[];
+  List<String> _tasks = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTasks();
+  }
 
   void dispose() {
     _controller.dispose();
@@ -44,6 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _tasks.add(_controller.text);
           _controller.clear();
       });
+      _saveTasks();
     }
   }
 
@@ -51,6 +59,19 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
         _tasks.removeAt(index);
     });
+    _saveTasks();
+  }
+
+  Future<void> _loadTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _tasks = prefs.getStringList('tasks') ?? [];
+    });
+  }
+
+  Future<void> _saveTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('tasks', _tasks);
   }
 
   @override
